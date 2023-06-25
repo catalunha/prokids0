@@ -1,0 +1,10 @@
+{
+  "applications": {
+    "_default": {
+      "link": "prokids0"
+    },
+    "prokids0": {
+      "applicationId": "Vks8oonkwK2mAw7abD8WdbDEcQU2t9shlfL3uB7d"
+    }
+  }
+}

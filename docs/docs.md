@@ -1,0 +1,1 @@
+ cd ~/myapp/cemec.net.br/prokids0 && flutter build web --dart-define-from-file=lib/app/core/keys/keys.json  && cd back4app/prokids0 && b4a deploy
