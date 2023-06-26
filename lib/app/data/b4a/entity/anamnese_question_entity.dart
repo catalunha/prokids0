@@ -7,10 +7,10 @@ class AnamneseQuestionEntity {
   static const String className = 'AnamneseQuestion';
   static const String id = 'objectId';
   static const String text = 'text';
-  static const String description = 'description';
   static const String type = 'type';
+  static const String options = 'options';
   static const String isRequired = 'isRequired';
-  static const String anamneseGroup = 'anamneseGroup';
+  static const String group = 'group';
   static const String isActive = 'isActive';
 
   AnamneseQuestionModel toModel(
@@ -20,13 +20,18 @@ class AnamneseQuestionEntity {
     AnamneseQuestionModel model = AnamneseQuestionModel(
       id: parseObject.objectId!,
       text: parseObject.get(AnamneseQuestionEntity.text),
-      description: parseObject.get(AnamneseQuestionEntity.description),
       type: parseObject.get(AnamneseQuestionEntity.type),
-      required: parseObject.get<bool>(AnamneseQuestionEntity.isRequired,
+      options:
+          parseObject.get<List<dynamic>>(AnamneseQuestionEntity.options) != null
+              ? parseObject
+                  .get<List<dynamic>>(AnamneseQuestionEntity.options)!
+                  .map((e) => e.toString())
+                  .toList()
+              : [],
+      isRequired: parseObject.get<bool>(AnamneseQuestionEntity.isRequired,
           defaultValue: false)!,
-      anamneseGroup: AnamneseGroupEntity().toModel(
-          parseObject.get(AnamneseQuestionEntity.anamneseGroup),
-          cols: cols),
+      group: AnamneseGroupEntity()
+          .toModel(parseObject.get(AnamneseQuestionEntity.group), cols: cols),
       isActive: parseObject.get<bool>(AnamneseQuestionEntity.isActive,
           defaultValue: true)!,
     );
@@ -36,18 +41,15 @@ class AnamneseQuestionEntity {
   Future<ParseObject> toParse(AnamneseQuestionModel model) async {
     final parseObject = ParseObject(AnamneseQuestionEntity.className);
     parseObject.objectId = model.id;
-
-    parseObject.set(AnamneseQuestionEntity.text, model.text);
-    if (model.description != null) {
-      parseObject.set(AnamneseQuestionEntity.description, model.description);
-    }
-    parseObject.set(AnamneseQuestionEntity.type, model.type);
-    parseObject.set(AnamneseQuestionEntity.isRequired, model.required);
     parseObject.set(
-        AnamneseQuestionEntity.anamneseGroup,
-        (ParseObject(AnamneseGroupEntity.className)
-              ..objectId = model.anamneseGroup.id)
+        AnamneseQuestionEntity.group,
+        (ParseObject(AnamneseGroupEntity.className)..objectId = model.group.id)
             .toPointer());
+    parseObject.set(AnamneseQuestionEntity.text, model.text);
+    parseObject.set(AnamneseQuestionEntity.type, model.type);
+    parseObject.set(AnamneseQuestionEntity.options, model.options);
+    parseObject.set(AnamneseQuestionEntity.isRequired, model.isRequired);
+
     parseObject.set(AnamneseQuestionEntity.isActive, model.isActive);
     return parseObject;
   }

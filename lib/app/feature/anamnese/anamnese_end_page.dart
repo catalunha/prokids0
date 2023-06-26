@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../routes.dart';
-
 class AnamneseEndPage extends StatelessWidget {
   const AnamneseEndPage({super.key});
 
@@ -11,6 +9,7 @@ class AnamneseEndPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Anamnese - Fim'),
+        automaticallyImplyLeading: false,
       ),
       body: Padding(
         padding: const EdgeInsets.all(18.0),
@@ -25,9 +24,9 @@ class AnamneseEndPage extends StatelessWidget {
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    context.goNamed(AppPage.anamneseStart.name);
+                    context.pop();
                   },
-                  child: const Text('Outra anamnese'),
+                  child: const Text('Realizar outra anamnese'),
                 ),
               )
             ],

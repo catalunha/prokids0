@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'controller/providers.dart';
+import '../controller/providers.dart';
 
 class AnamneseAnswerText extends ConsumerStatefulWidget {
   const AnamneseAnswerText({super.key});
@@ -16,8 +16,8 @@ class _AnamneseAnswerTextState extends ConsumerState<AnamneseAnswerText> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    final answerTypeText = ref.read(answerTypeTextProvider);
-    _txtTec.text = answerTypeText;
+    final answered = ref.read(answeredProvider);
+    _txtTec.text = answered.join(',');
   }
 
   @override
@@ -30,10 +30,10 @@ class _AnamneseAnswerTextState extends ConsumerState<AnamneseAnswerText> {
   var intBefore = -1;
   @override
   Widget build(BuildContext context) {
-    final answerTypeText = ref.watch(answerTypeTextProvider);
+    final answered = ref.watch(answeredProvider);
     final index = ref.watch(indexCurrentProvider);
     if (intBefore != index) {
-      _txtTec.text = answerTypeText;
+      _txtTec.text = answered.join(',');
       intBefore = index;
     }
     return Padding(
@@ -49,17 +49,21 @@ class _AnamneseAnswerTextState extends ConsumerState<AnamneseAnswerText> {
             ),
             maxLines: 3,
             onChanged: (value) {
-              ref.read(answerTypeTextProvider.notifier).set(value);
+              if (value.isEmpty) {
+                ref.read(answeredProvider.notifier).reset();
+              } else {
+                ref.read(answeredProvider.notifier).set([value]);
+              }
             },
           ),
           TextButton(
             onPressed: () {
               _txtTec.text = '';
-              ref.read(answerTypeTextProvider.notifier).set('');
+              ref.read(answeredProvider.notifier).reset();
             },
             child: const Text('Limpar resposta'),
           ),
-          Text(answerTypeText)
+          Text(answered.join(','))
         ],
       ),
     );

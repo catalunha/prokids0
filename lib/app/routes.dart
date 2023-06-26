@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'feature/anamnese/anamnese_answer_page.dart';
 import 'feature/anamnese/anamnese_end_page.dart';
 import 'feature/anamnese/anamnese_interview_page.dart';
+import 'feature/anamnese/anamnese_questions/anamnese_questions_page.dart';
 import 'feature/anamnese/anamnese_start_page.dart';
 import 'feature/error/error_page.dart';
 
@@ -38,10 +38,10 @@ final goRouterProv = Provider<GoRouter>(
               },
             ),
             GoRoute(
-              path: AppPage.anamneseAnswer.path,
-              name: AppPage.anamneseAnswer.name,
+              path: AppPage.anamneseQuestions.path,
+              name: AppPage.anamneseQuestions.name,
               builder: (context, state) {
-                return AnamneseAnswerPage(
+                return AnamneseQuestionsPage(
                   key: state.pageKey,
                 );
               },
@@ -74,7 +74,7 @@ rotas
 enum AppPage {
   anamneseStart('/', '/'),
   anamneseInterview('anamneseInterview', 'anamneseInterview'),
-  anamneseAnswer('anamneseAnswer', 'anamneseAnswer'),
+  anamneseQuestions('anamneseQuestions', 'anamneseQuestions'),
   anamneseEnd('anamneseEnd', 'anamneseEnd');
 
   final String path;

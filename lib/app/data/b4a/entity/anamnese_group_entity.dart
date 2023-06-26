@@ -17,7 +17,6 @@ class AnamneseGroupEntity {
     AnamneseGroupModel model = AnamneseGroupModel(
       id: parseObject.objectId!,
       name: parseObject.get(AnamneseGroupEntity.name),
-      description: parseObject.get(AnamneseGroupEntity.description),
       orderOfQuestions: parseObject
                   .get<List<dynamic>>(AnamneseGroupEntity.orderOfQuestions) !=
               null
@@ -36,9 +35,7 @@ class AnamneseGroupEntity {
     parseObject.objectId = model.id;
 
     parseObject.set(AnamneseGroupEntity.name, model.name);
-    if (model.description != null) {
-      parseObject.set(AnamneseGroupEntity.description, model.description);
-    }
+
     parseObject.set(AnamneseGroupEntity.isActive, model.isActive);
     parseObject.set(
         AnamneseGroupEntity.orderOfQuestions, model.orderOfQuestions);

@@ -8,11 +8,11 @@ part 'anamnese_question_model.freezed.dart';
 abstract class AnamneseQuestionModel with _$AnamneseQuestionModel {
   factory AnamneseQuestionModel({
     String? id,
+    required AnamneseGroupModel group,
     required String text,
-    String? description,
     required String type,
-    @Default(false) bool required,
-    required AnamneseGroupModel anamneseGroup,
+    required List<String> options,
+    @Default(false) bool isRequired,
     @Default(true) bool isActive,
   }) = _AnamneseQuestionModel;
 }

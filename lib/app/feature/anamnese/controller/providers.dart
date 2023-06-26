@@ -5,7 +5,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/models/anamnese_answer_model.dart';
 import '../../../core/models/anamnese_group_model.dart';
-import '../../../core/models/anamnese_model.dart';
 import '../../../core/models/anamnese_people_model.dart';
 import '../../../core/models/anamnese_question_model.dart';
 import '../../../core/repositories/providers.dart';
@@ -46,12 +45,6 @@ class ReadAllQuestions extends _$ReadAllQuestions {
         listGroupsOrdened.add(mapping[groupId]!);
       }
     } else {
-      if (listGroups.isNotEmpty) {
-        await ref.read(anamneseRepositoryProvider).save(AnamneseModel(
-            name: 'orderOfGroups',
-            orderOfGroups: listGroups.map((e) => e.id!).toList()));
-      }
-
       listGroupsOrdened = [...listGroups];
     }
 
@@ -66,21 +59,21 @@ class ReadAllQuestions extends _$ReadAllQuestions {
       cols: {
         "${AnamneseQuestionEntity.className}.cols": [
           AnamneseQuestionEntity.text,
-          AnamneseQuestionEntity.description,
           AnamneseQuestionEntity.type,
+          AnamneseQuestionEntity.options,
           AnamneseQuestionEntity.isActive,
           AnamneseQuestionEntity.isRequired,
-          AnamneseQuestionEntity.anamneseGroup,
+          AnamneseQuestionEntity.group,
         ],
         "${AnamneseQuestionEntity.className}.pointers": [
-          AnamneseQuestionEntity.anamneseGroup,
+          AnamneseQuestionEntity.group,
         ],
       },
     );
     var questionsOrdered = <AnamneseQuestionModel>[];
     for (var group in listGroupsOrdened) {
       final questionsUnOrdered = listQuestions
-          .where((element) => element.anamneseGroup.id == group.id)
+          .where((element) => element.group.id == group.id)
           .toList();
 
       if (group.orderOfQuestions.isNotEmpty) {
@@ -99,37 +92,39 @@ class ReadAllQuestions extends _$ReadAllQuestions {
     // --- Listando Question
 
     ref.read(indexEndProvider.notifier).set(questionsOrdered.length);
-    ref.read(questionCurrentProvider.notifier).set(questionsOrdered[0]);
     final people = ref.read(anamnesePeopleFormProvider).model;
-    var answers = <AnamneseAnswerModel>[];
-    for (var question in questionsOrdered) {
-      answers.add(AnamneseAnswerModel(people: people, question: question));
-    }
     ref.invalidate(indexCurrentProvider);
+
+    var answers = <AnamneseAnswerModel>[];
+    var order = 1;
+    for (var question in questionsOrdered) {
+      answers.add(AnamneseAnswerModel(
+        people: people,
+        order: order++,
+        group: question.group.name,
+        text: question.text,
+        type: question.type,
+        options: question.options,
+        answers: [],
+      ));
+    }
+    ref.read(answerCurrentProvider.notifier).set(answers[0]);
     return answers;
   }
 
-  AnamneseAnswerModel getQuestion(int id) {
+  AnamneseAnswerModel getAnswer(int id) {
     return state.requireValue[id];
   }
 
   void updateAnswer(
     int id, {
-    required bool answered,
-    bool? answerBool,
-    String? answerText,
+    required List<String> answers,
   }) {
-    log('updateAnswer.id: $id');
-    log('updateAnswer.answered: $answered');
-    log('updateAnswer.answerBool: $answerBool');
-    log('updateAnswer.answerText: $answerText');
     List<AnamneseAnswerModel> list = [...state.requireValue];
     AnamneseAnswerModel temp = list[id];
     list.replaceRange(id, id + 1, [
       temp.copyWith(
-        answered: answered,
-        answerBool: answerBool,
-        answerText: answerText,
+        answers: answers,
       )
     ]);
     state = AsyncData([...list]);
@@ -137,73 +132,97 @@ class ReadAllQuestions extends _$ReadAllQuestions {
 
   void saveAnswers() async {
     ref
-        .read(anamnesePeopleFormStatusStateProvider.notifier)
-        .set(AnamneseStatus.loading);
+        .read(anamneseQuestionsStatusStateProvider.notifier)
+        .set(AnamneseQuestionsStatus.loading);
     try {
       final repo = ref.read(anamneseAnswerRepositoryProvider);
       var saves = <Future<String>>[];
       for (var answer in state.requireValue) {
-        if (answer.answered) {
+        if (answer.answers.isNotEmpty) {
           saves.add(repo.save(answer));
         }
       }
       Future.wait(saves);
       ref
-          .read(anamnesePeopleFormStatusStateProvider.notifier)
-          .set(AnamneseStatus.success);
+          .read(anamneseQuestionsStatusStateProvider.notifier)
+          .set(AnamneseQuestionsStatus.success);
     } catch (e) {
       ref
-          .read(anamnesePeopleFormStatusStateProvider.notifier)
-          .set(AnamneseStatus.error);
+          .read(anamneseQuestionsStatusStateProvider.notifier)
+          .set(AnamneseQuestionsStatus.error);
     }
   }
 }
 
 @riverpod
-class AnamnesePeopleFormStatusState extends _$AnamnesePeopleFormStatusState {
+class AnamneseQuestionsStatusState extends _$AnamneseQuestionsStatusState {
   @override
-  AnamneseStatus build() {
-    return AnamneseStatus.initial;
+  AnamneseQuestionsStatus build() {
+    return AnamneseQuestionsStatus.initial;
   }
 
-  void set(AnamneseStatus value) {
+  void set(AnamneseQuestionsStatus value) {
     state = value;
   }
 }
 
 @Riverpod(keepAlive: true)
-class QuestionCurrent extends _$QuestionCurrent {
+class AnswerCurrent extends _$AnswerCurrent {
   @override
-  AnamneseQuestionModel? build() {
+  AnamneseAnswerModel? build() {
     return null;
   }
 
-  void set(AnamneseQuestionModel value) {
+  void set(AnamneseAnswerModel value) {
     state = value;
   }
 }
 
+// @riverpod
+// class AnswerTypeOptions extends _$AnswerTypeOptions {
+//   @override
+//   List<String> build() {
+//     return [];
+//   }
+
+//   void set(List<String> value) {
+//     state = value;
+//   }
+// }
+
 @riverpod
-class AnswerTypeBoolean extends _$AnswerTypeBoolean {
+class Answered extends _$Answered {
   @override
-  AnswerTypeBooleanStatus build() {
-    return AnswerTypeBooleanStatus.none;
+  List<String> build() {
+    return [];
   }
 
-  void set(AnswerTypeBooleanStatus value) {
+  // void add(String value) {
+  //   state = [...state, value];
+  // }
+
+  void set(List<String> value) {
     state = value;
   }
-}
 
-@riverpod
-class AnswerTypeText extends _$AnswerTypeText {
-  @override
-  String build() {
-    return '';
+  void reset() {
+    state = [];
   }
 
-  void set(String value) {
-    state = value;
+  // void remove(String value) {
+  //   var temp = [...state];
+  //   temp.remove(value);
+  //   state = [...temp];
+  // }
+
+  void update(String value) {
+    var temp = [...state];
+    if (temp.contains(value)) {
+      temp.remove(value);
+    } else {
+      temp.add(value);
+    }
+    state = [...temp];
   }
 }
 
@@ -243,9 +262,9 @@ class IndexCurrent extends _$IndexCurrent {
       await _updateBeforeChangeIndex();
       state = state - 1;
       await _updateAfterChangeIndex();
-      final questionCurrent =
-          ref.read(readAllQuestionsProvider.notifier).getQuestion(state);
-      ref.read(questionCurrentProvider.notifier).set(questionCurrent.question!);
+      final answerCurrent =
+          ref.read(readAllQuestionsProvider.notifier).getAnswer(state);
+      ref.read(answerCurrentProvider.notifier).set(answerCurrent);
     }
   }
 
@@ -253,70 +272,33 @@ class IndexCurrent extends _$IndexCurrent {
     final indexEnd = ref.read(indexEndProvider);
     if (state < (indexEnd - 1)) {
       await _updateBeforeChangeIndex();
-
       state = state + 1;
       await _updateAfterChangeIndex();
-      final questionCurrent2 =
-          ref.read(readAllQuestionsProvider.notifier).getQuestion(state);
-      ref
-          .read(questionCurrentProvider.notifier)
-          .set(questionCurrent2.question!);
+      final answerCurrent =
+          ref.read(readAllQuestionsProvider.notifier).getAnswer(state);
+      ref.read(answerCurrentProvider.notifier).set(answerCurrent);
     }
   }
 
   Future<void> _updateBeforeChangeIndex() async {
-    final answerTypeBoolean = ref.read(answerTypeBooleanProvider);
-    final answerTypeText = ref.read(answerTypeTextProvider);
+    final answered = ref.read(answeredProvider);
 
-    if (answerTypeBoolean != AnswerTypeBooleanStatus.none ||
-        answerTypeText.isNotEmpty) {
-      if (answerTypeBoolean != AnswerTypeBooleanStatus.none) {
-        ref.read(readAllQuestionsProvider.notifier).updateAnswer(state,
-            answered: true,
-            answerBool: answerTypeBoolean == AnswerTypeBooleanStatus.yes
-                ? true
-                : false);
-      }
-      if (answerTypeText.isNotEmpty) {
-        ref
-            .read(readAllQuestionsProvider.notifier)
-            .updateAnswer(state, answered: true, answerText: answerTypeText);
-      }
-    } else {
-      ref.read(readAllQuestionsProvider.notifier).updateAnswer(state,
-          answered: false, answerBool: null, answerText: null);
-    }
-    ref.invalidate(answerTypeBooleanProvider);
-    ref.invalidate(answerTypeTextProvider);
+    ref.read(readAllQuestionsProvider.notifier).updateAnswer(
+          state,
+          answers: answered,
+        );
 
-    final questionCurrent =
-        ref.read(readAllQuestionsProvider.notifier).getQuestion(state);
-    log('_updateBeforeChangeIndex questionCurrent[$state]: $questionCurrent');
+    ref.invalidate(answeredProvider);
   }
 
   Future<void> _updateAfterChangeIndex() async {
-    final questionCurrent =
-        ref.read(readAllQuestionsProvider.notifier).getQuestion(state);
-    if (questionCurrent.answered) {
-      if (questionCurrent.answerBool != null) {
-        ref.read(answerTypeBooleanProvider.notifier).set(
-            questionCurrent.answerBool!
-                ? AnswerTypeBooleanStatus.yes
-                : AnswerTypeBooleanStatus.no);
-      }
-      if (questionCurrent.answerText != null) {
-        ref
-            .read(answerTypeTextProvider.notifier)
-            .set(questionCurrent.answerText!);
-      }
+    final answerCurrent =
+        ref.read(readAllQuestionsProvider.notifier).getAnswer(state);
+    if (answerCurrent.answers.isNotEmpty) {
+      ref.read(answeredProvider.notifier).set(answerCurrent.answers);
     } else {
-      ref.invalidate(answerTypeBooleanProvider);
-      ref.invalidate(answerTypeTextProvider);
+      ref.invalidate(answeredProvider);
     }
-    final answerTypeBoolean = ref.read(answerTypeBooleanProvider);
-    final answerTypeText = ref.read(answerTypeTextProvider);
-    log('answerTypeBoolean: $answerTypeBoolean');
-    log('answerTypeText: $answerTypeText');
   }
 }
 
@@ -360,7 +342,7 @@ class AnamnesePeopleForm extends _$AnamnesePeopleForm {
     required String adultPhone,
     required String childName,
   }) async {
-    state = state.copyWith(status: AnamneseStatus.loading);
+    state = state.copyWith(status: AnamneseQuestionsStatus.loading);
     try {
       final childIsFemale = ref.read(childIsFemaleProvider);
       final childBirthDate = ref.read(childBirthDateProvider);
@@ -378,7 +360,7 @@ class AnamnesePeopleForm extends _$AnamnesePeopleForm {
           .save(anamnesePeopleTemp);
 
       state = state.copyWith(
-        status: AnamneseStatus.success,
+        status: AnamneseQuestionsStatus.success,
         model: anamnesePeopleTemp.copyWith(
           id: id,
         ),
@@ -387,7 +369,7 @@ class AnamnesePeopleForm extends _$AnamnesePeopleForm {
       log('$e');
       log('$st');
       state = state.copyWith(
-          status: AnamneseStatus.error, error: 'Erro em editar cargo');
+          status: AnamneseQuestionsStatus.error, error: 'Erro em editar cargo');
     }
   }
 }

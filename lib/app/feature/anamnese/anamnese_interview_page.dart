@@ -1,3 +1,4 @@
+import 'package:age_calculator/age_calculator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -47,23 +48,31 @@ class _AnamneseDataPageState extends ConsumerState<AnamneseInterviewPage>
   Widget build(BuildContext context) {
     ref.listen<AnamnesePeopleFormState>(anamnesePeopleFormProvider,
         (previous, next) async {
-      if (next.status == AnamneseStatus.error) {
+      if (next.status == AnamneseQuestionsStatus.error) {
         hideLoader(context);
         showMessageError(context, next.error);
       }
-      if (next.status == AnamneseStatus.success) {
+      if (next.status == AnamneseQuestionsStatus.success) {
         hideLoader(context); //sai do Dialog do loading
         // context.pop(); //sai da pagina
         Navigator.pop(context);
       }
-      if (next.status == AnamneseStatus.loading) {
+      if (next.status == AnamneseQuestionsStatus.loading) {
         showLoader(context);
       }
     });
-
+    final childBirthDate = ref.watch(childBirthDateProvider);
+    var childBirthDateAgeText = '...';
+    if (childBirthDate != null) {
+      final childBirthDateAge =
+          AgeCalculator.age(childBirthDate, today: DateTime.now());
+      childBirthDateAgeText =
+          '${childBirthDateAge.years} a, ${childBirthDateAge.months} m, ${childBirthDateAge.days} d';
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('Dados pessoais'),
+        automaticallyImplyLeading: false,
       ),
       body: Center(
         child: Form(
@@ -105,8 +114,8 @@ class _AnamneseDataPageState extends ConsumerState<AnamneseInterviewPage>
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        // mainAxisAlignment: MainAxisAlignment.center,
+                      child: Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
                           const Text('Data de nascimento:'),
                           const SizedBox(width: 10),
@@ -134,6 +143,8 @@ class _AnamneseDataPageState extends ConsumerState<AnamneseInterviewPage>
                               ],
                             ),
                           ),
+                          if (ref.watch(childBirthDateProvider) != null)
+                            Text(childBirthDateAgeText)
                         ],
                       ),
                     ),
@@ -161,7 +172,7 @@ class _AnamneseDataPageState extends ConsumerState<AnamneseInterviewPage>
                         } else {
                           return;
                         }
-                        context.goNamed(AppPage.anamneseAnswer.name);
+                        context.goNamed(AppPage.anamneseQuestions.name);
                       },
                       child: const Text('Iniciar Questionário.'),
                     )

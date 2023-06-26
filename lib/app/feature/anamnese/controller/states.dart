@@ -4,14 +4,14 @@ import '../../../core/models/anamnese_people_model.dart';
 
 part 'states.freezed.dart';
 
-enum AnswerTypeBooleanStatus { none, yes, no }
+enum AnamneseQuestionsStatus { initial, loading, success, error }
 
-enum AnamneseStatus { initial, loading, success, error }
+enum AnamneseQuestionTypeStatus { simple, multiple, text, numeric }
 
 @freezed
 abstract class AnamnesePeopleFormState with _$AnamnesePeopleFormState {
   factory AnamnesePeopleFormState({
-    @Default(AnamneseStatus.initial) AnamneseStatus status,
+    @Default(AnamneseQuestionsStatus.initial) AnamneseQuestionsStatus status,
     @Default('') String error,
     AnamnesePeopleModel? model,
   }) = _AnamnesePeopleFormState;

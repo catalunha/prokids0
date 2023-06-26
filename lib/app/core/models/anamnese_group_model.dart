@@ -7,7 +7,6 @@ abstract class AnamneseGroupModel with _$AnamneseGroupModel {
   factory AnamneseGroupModel({
     String? id,
     required String name,
-    String? description,
     @Default([]) List<String> orderOfQuestions,
     @Default(true) bool isActive,
   }) = _AnamneseGroupModel;
