@@ -22,7 +22,7 @@ class ReadAllQuestions extends _$ReadAllQuestions {
     // +++ Listando Group
     QueryBuilder<ParseObject> queryGroups =
         QueryBuilder<ParseObject>(ParseObject(AnamneseGroupEntity.className));
-    queryGroups.orderByAscending('name');
+    queryGroups.whereEqualTo(AnamneseGroupEntity.isActive, true);
     final listGroups = await ref.read(anamneseGroupRepositoryProvider).list(
       queryGroups,
       cols: {
@@ -42,17 +42,19 @@ class ReadAllQuestions extends _$ReadAllQuestions {
         for (var group in listGroups) group.id!: group
       };
       for (var groupId in anamnese.orderOfGroups) {
-        listGroupsOrdened.add(mapping[groupId]!);
+        if (mapping.containsKey(groupId)) {
+          listGroupsOrdened.add(mapping[groupId]!);
+        }
       }
     } else {
       listGroupsOrdened = [...listGroups];
     }
-
+    log('listGroupsOrdened: ${listGroupsOrdened.length}');
     // --- Listando Group
     // +++ Listando Question
     QueryBuilder<ParseObject> queryQuestions = QueryBuilder<ParseObject>(
         ParseObject(AnamneseQuestionEntity.className));
-    queryQuestions.orderByAscending('text');
+    queryQuestions.whereEqualTo(AnamneseQuestionEntity.isActive, true);
     final listQuestions =
         await ref.read(anamneseQuestionRepositoryProvider).list(
       queryQuestions,
@@ -89,6 +91,8 @@ class ReadAllQuestions extends _$ReadAllQuestions {
         questionsOrdered.addAll([...questionsUnOrdered]);
       }
     }
+    log('questionsOrdered: ${questionsOrdered.length}');
+
     // --- Listando Question
 
     ref.read(indexEndProvider.notifier).set(questionsOrdered.length);
@@ -134,13 +138,23 @@ class ReadAllQuestions extends _$ReadAllQuestions {
     ref
         .read(anamneseQuestionsStatusStateProvider.notifier)
         .set(AnamneseQuestionsStatus.loading);
+
+    //+++ Salvando a ultima pergunta caso ela nao tenha sido previous
+    final indexEnd = ref.read(indexEndProvider);
+    final answered = ref.read(answeredProvider);
+    ref.read(readAllQuestionsProvider.notifier).updateAnswer(
+          indexEnd - 1,
+          answers: answered,
+        );
+    //---
+
     try {
       final repo = ref.read(anamneseAnswerRepositoryProvider);
       var saves = <Future<String>>[];
       for (var answer in state.requireValue) {
-        if (answer.answers.isNotEmpty) {
-          saves.add(repo.save(answer));
-        }
+        // if (answer.answers.isNotEmpty) {
+        saves.add(repo.save(answer));
+        // }
       }
       Future.wait(saves);
       ref
@@ -318,7 +332,7 @@ class ChildBirthDate extends _$ChildBirthDate {
 class ChildIsFemale extends _$ChildIsFemale {
   @override
   bool build() {
-    return true;
+    return false;
   }
 
   void toggle() {

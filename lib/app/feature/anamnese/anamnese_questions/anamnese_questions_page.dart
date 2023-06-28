@@ -53,8 +53,22 @@ class AnamneseQuestionsPage extends ConsumerWidget with Loader, Messages {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(answerCurrent.group),
-                  Text(answerCurrent.text),
+                  Text(
+                    answerCurrent.group,
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      textAlign: TextAlign.center,
+                      answerCurrent.text,
+                      style:
+                          const TextStyle(fontSize: 32, color: Colors.yellow),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  const Text('Sua resposta'),
                   if (answerCurrent.type ==
                       AnamneseQuestionTypeStatus.simple.name)
                     const AnamneseAnswerSimple(),
@@ -67,6 +81,7 @@ class AnamneseQuestionsPage extends ConsumerWidget with Loader, Messages {
                   if (answerCurrent.type ==
                       AnamneseQuestionTypeStatus.numeric.name)
                     const AnamneseAnswerNumber(),
+                  const SizedBox(height: 20),
                   const AnamneseQuestionNavigator(),
                 ],
               ),

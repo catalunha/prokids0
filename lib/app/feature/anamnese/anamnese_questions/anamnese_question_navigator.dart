@@ -26,7 +26,7 @@ class AnamneseQuestionNavigator extends ConsumerWidget {
                         ref.read(indexCurrentProvider.notifier).previous();
                       }
                     : null,
-                child: const Text('previous'),
+                child: const Text('Anterior'),
               ),
             ),
             SizedBox(
@@ -37,7 +37,7 @@ class AnamneseQuestionNavigator extends ConsumerWidget {
                     : () {
                         ref.read(indexCurrentProvider.notifier).next();
                       },
-                child: const Text('next'),
+                child: const Text('Próxima'),
               ),
             ),
           ],
@@ -66,7 +66,7 @@ class AnamneseQuestionNavigator extends ConsumerWidget {
                 ),
               )
             : const SizedBox.shrink(),
-        Text('indexCurrent: $indexCurrent'),
+        Text('Pergunta: ${indexCurrent + 1}'),
       ],
     );
   }

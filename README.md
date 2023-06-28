@@ -1,16 +1,19 @@
 # prokids0
 
-A new Flutter project.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+# Texto de abertura
+Olá,
+Esta é uma breve pesquisa sobre as condições gerais de sua criança.
+Estas informações serão úteis para nossa equipe desenvolver o melhor trabalho neuro/motor em cada atividade.
+A seguir serão solicitados dados básicos de você e da criança.
+E depois cada pergunta será feita uma após a outra.
+Preencha corretamente e vá ate o final da pesquisa.
+Pode parecer grande mas é importante você concluir com qualidade.
+Então reserve um tempo para isto.
+Obrigado.
+Equipe da ProKids.
 
-A few resources to get you started if this is your first Flutter project:
+# Texto de fechamento
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Obrigado.

@@ -17,6 +17,8 @@ class AnamneseQuestionB4a {
     if (pagination != null) {
       query.setAmountToSkip((pagination.page - 1) * pagination.limit);
       query.setLimit(pagination.limit);
+    } else {
+      query.setLimit(1000);
     }
     if (cols.containsKey('${AnamneseQuestionEntity.className}.cols')) {
       query.keysToReturn(cols['${AnamneseQuestionEntity.className}.cols']!);
