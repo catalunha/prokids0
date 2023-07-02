@@ -45,9 +45,6 @@ app.*.map.json
 
 
 # my exclude files
-.vscode/
-.vscode
-docs/deploy.md
 .VSCodeCounter
 *.freezed.dart
 *.g.dart 
