@@ -31,9 +31,9 @@ class _AnamneseDataPageState extends ConsumerState<AnamneseInterviewPage>
   @override
   void initState() {
     super.initState();
-    _adultNameTec.text = "";
-    _adultPhoneTec.text = "";
-    _childNameTec.text = "";
+    _adultNameTec.text = '';
+    _adultPhoneTec.text = '';
+    _childNameTec.text = '';
   }
 
   @override
@@ -121,7 +121,7 @@ class _AnamneseDataPageState extends ConsumerState<AnamneseInterviewPage>
                           const SizedBox(width: 10),
                           ElevatedButton(
                             onPressed: () async {
-                              DateTime? newDate = await showDatePicker(
+                              final DateTime? newDate = await showDatePicker(
                                 context: context,
                                 initialDate: DateTime.now(),
                                 firstDate: DateTime(DateTime.now().year - 100),
@@ -139,7 +139,7 @@ class _AnamneseDataPageState extends ConsumerState<AnamneseInterviewPage>
                                 Text(ref.watch(childBirthDateProvider) != null
                                     ? dateFormat.format(
                                         ref.watch(childBirthDateProvider)!)
-                                    : "Não informado"),
+                                    : 'Não informado'),
                               ],
                             ),
                           ),

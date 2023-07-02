@@ -16,7 +16,7 @@ class AnamnesePeopleEntity {
     ParseObject parseObject, {
     Map<String, List<String>> cols = const {},
   }) {
-    AnamnesePeopleModel model = AnamnesePeopleModel(
+    final AnamnesePeopleModel model = AnamnesePeopleModel(
       id: parseObject.objectId!,
       createdAt: parseObject.createdAt!.toLocal(),
       adultName: parseObject.get(AnamnesePeopleEntity.adultName),

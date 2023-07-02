@@ -17,7 +17,7 @@ class AnamneseQuestionEntity {
     ParseObject parseObject, {
     Map<String, List<String>> cols = const {},
   }) {
-    AnamneseQuestionModel model = AnamneseQuestionModel(
+    final AnamneseQuestionModel model = AnamneseQuestionModel(
       id: parseObject.objectId!,
       text: parseObject.get(AnamneseQuestionEntity.text),
       type: parseObject.get(AnamneseQuestionEntity.type),

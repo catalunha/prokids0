@@ -12,7 +12,7 @@ class AnamneseEntity {
     ParseObject parseObject, {
     Map<String, List<String>> cols = const {},
   }) {
-    AnamneseModel model = AnamneseModel(
+    final AnamneseModel model = AnamneseModel(
       id: parseObject.objectId!,
       name: parseObject.get(AnamneseEntity.name),
       orderOfGroups:

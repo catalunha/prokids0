@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:prokids0/app/routes.dart';
+import 'routes.dart';
 
 class App extends ConsumerWidget {
   const App({super.key});

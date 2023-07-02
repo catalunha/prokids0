@@ -18,7 +18,7 @@ class AnamneseAnswerEntity {
     ParseObject parseObject, {
     Map<String, List<String>> cols = const {},
   }) {
-    AnamneseAnswerModel model = AnamneseAnswerModel(
+    final AnamneseAnswerModel model = AnamneseAnswerModel(
       id: parseObject.objectId!,
       people: parseObject.get(AnamneseAnswerEntity.people) != null
           ? AnamnesePeopleEntity()

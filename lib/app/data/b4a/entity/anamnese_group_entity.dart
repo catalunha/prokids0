@@ -14,7 +14,7 @@ class AnamneseGroupEntity {
     ParseObject parseObject, {
     Map<String, List<String>> cols = const {},
   }) {
-    AnamneseGroupModel model = AnamneseGroupModel(
+    final AnamneseGroupModel model = AnamneseGroupModel(
       id: parseObject.objectId!,
       name: parseObject.get(AnamneseGroupEntity.name),
       orderOfQuestions: parseObject

@@ -10,9 +10,7 @@ class AnamneseAnswerSimple extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final answered = ref.watch(answeredProvider);
     final answerCurrent = ref.watch(answerCurrentProvider)!;
-    for (var item in answerCurrent.options) {
-      print(item);
-    }
+
     return Column(
       children: [
         Row(

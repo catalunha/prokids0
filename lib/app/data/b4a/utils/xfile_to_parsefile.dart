@@ -25,7 +25,7 @@ class XFileToParseFile {
       }
       final ParseResponse responseParseFile = await parseFile.save();
       if (responseParseFile.success && responseParseFile.results != null) {
-        ParseFileBase parseFileBase =
+        final ParseFileBase parseFileBase =
             kIsWeb ? parseFile as ParseWebFile : parseFile as ParseFile;
         final parseObject = ParseObject(className);
         parseObject.objectId = objectId;

@@ -19,7 +19,7 @@ class AppCalendarButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
-        var initialDate = getDate() ?? DateTime.now();
+        final initialDate = getDate() ?? DateTime.now();
         final DateTime? selectedDate = await showDatePicker(
           context: context,
           initialDate: initialDate,

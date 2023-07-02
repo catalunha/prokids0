@@ -14,7 +14,6 @@ class _AnamneseAnswerTextState extends ConsumerState<AnamneseAnswerText> {
   final _txtTec = TextEditingController();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     final answered = ref.read(answeredProvider);
     _txtTec.text = answered.join(',');
@@ -22,9 +21,8 @@ class _AnamneseAnswerTextState extends ConsumerState<AnamneseAnswerText> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    _txtTec.dispose();
     super.dispose();
-    _txtTec.text = '';
   }
 
   var intBefore = -1;

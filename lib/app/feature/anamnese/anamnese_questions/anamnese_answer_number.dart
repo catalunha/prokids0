@@ -15,7 +15,6 @@ class _AnamneseAnswerNumberState extends ConsumerState<AnamneseAnswerNumber> {
   final _txtTec = TextEditingController();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     final answered = ref.read(answeredProvider);
     _txtTec.text = answered.join(',');

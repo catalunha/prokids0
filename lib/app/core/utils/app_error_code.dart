@@ -7,7 +7,7 @@ class AppErrorCode {
   }
   String code = '';
   String message = '';
-  decode() {
+  void decode() {
     code = 'Fluxus Erro: $codeNumber';
     message = _appCodes[code]!;
   }

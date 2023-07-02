@@ -20,13 +20,13 @@ class ReadAllQuestions extends _$ReadAllQuestions {
   @override
   FutureOr<List<AnamneseAnswerModel>> build() async {
     // +++ Listando Group
-    QueryBuilder<ParseObject> queryGroups =
+    final QueryBuilder<ParseObject> queryGroups =
         QueryBuilder<ParseObject>(ParseObject(AnamneseGroupEntity.className));
     queryGroups.whereEqualTo(AnamneseGroupEntity.isActive, true);
     final listGroups = await ref.read(anamneseGroupRepositoryProvider).list(
       queryGroups,
       cols: {
-        "${AnamneseGroupEntity.className}.cols": [
+        '${AnamneseGroupEntity.className}.cols': [
           AnamneseGroupEntity.name,
           AnamneseGroupEntity.description,
           AnamneseGroupEntity.isActive,
@@ -34,7 +34,7 @@ class ReadAllQuestions extends _$ReadAllQuestions {
         ],
       },
     );
-    var anamnese =
+    final anamnese =
         await ref.read(anamneseRepositoryProvider).readByName('orderOfGroups');
     var listGroupsOrdened = <AnamneseGroupModel>[];
     if (anamnese != null && anamnese.orderOfGroups.isNotEmpty) {
@@ -52,14 +52,14 @@ class ReadAllQuestions extends _$ReadAllQuestions {
     log('listGroupsOrdened: ${listGroupsOrdened.length}');
     // --- Listando Group
     // +++ Listando Question
-    QueryBuilder<ParseObject> queryQuestions = QueryBuilder<ParseObject>(
+    final QueryBuilder<ParseObject> queryQuestions = QueryBuilder<ParseObject>(
         ParseObject(AnamneseQuestionEntity.className));
     queryQuestions.whereEqualTo(AnamneseQuestionEntity.isActive, true);
     final listQuestions =
         await ref.read(anamneseQuestionRepositoryProvider).list(
       queryQuestions,
       cols: {
-        "${AnamneseQuestionEntity.className}.cols": [
+        '${AnamneseQuestionEntity.className}.cols': [
           AnamneseQuestionEntity.text,
           AnamneseQuestionEntity.type,
           AnamneseQuestionEntity.options,
@@ -67,12 +67,12 @@ class ReadAllQuestions extends _$ReadAllQuestions {
           AnamneseQuestionEntity.isRequired,
           AnamneseQuestionEntity.group,
         ],
-        "${AnamneseQuestionEntity.className}.pointers": [
+        '${AnamneseQuestionEntity.className}.pointers': [
           AnamneseQuestionEntity.group,
         ],
       },
     );
-    var questionsOrdered = <AnamneseQuestionModel>[];
+    final questionsOrdered = <AnamneseQuestionModel>[];
     for (var group in listGroupsOrdened) {
       final questionsUnOrdered = listQuestions
           .where((element) => element.group.id == group.id)
@@ -99,7 +99,7 @@ class ReadAllQuestions extends _$ReadAllQuestions {
     final people = ref.read(anamnesePeopleFormProvider).model;
     ref.invalidate(indexCurrentProvider);
 
-    var answers = <AnamneseAnswerModel>[];
+    final answers = <AnamneseAnswerModel>[];
     var order = 1;
     for (var question in questionsOrdered) {
       answers.add(AnamneseAnswerModel(
@@ -124,8 +124,8 @@ class ReadAllQuestions extends _$ReadAllQuestions {
     int id, {
     required List<String> answers,
   }) {
-    List<AnamneseAnswerModel> list = [...state.requireValue];
-    AnamneseAnswerModel temp = list[id];
+    final List<AnamneseAnswerModel> list = [...state.requireValue];
+    final AnamneseAnswerModel temp = list[id];
     list.replaceRange(id, id + 1, [
       temp.copyWith(
         answers: answers,
@@ -150,7 +150,7 @@ class ReadAllQuestions extends _$ReadAllQuestions {
 
     try {
       final repo = ref.read(anamneseAnswerRepositoryProvider);
-      var saves = <Future<String>>[];
+      final saves = <Future<String>>[];
       for (var answer in state.requireValue) {
         // if (answer.answers.isNotEmpty) {
         saves.add(repo.save(answer));
@@ -230,7 +230,7 @@ class Answered extends _$Answered {
   // }
 
   void update(String value) {
-    var temp = [...state];
+    final temp = [...state];
     if (temp.contains(value)) {
       temp.remove(value);
     } else {
