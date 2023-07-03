@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../utils/app_color.dart';
 import '../controller/providers.dart';
 
 class AnamneseAnswerSimple extends ConsumerWidget {
@@ -13,6 +14,7 @@ class AnamneseAnswerSimple extends ConsumerWidget {
 
     return Column(
       children: [
+        const Text('Escolha uma dentre as opções'),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -23,7 +25,8 @@ class AnamneseAnswerSimple extends ConsumerWidget {
                 },
                 style: ButtonStyle(
                   backgroundColor: answered.contains(item)
-                      ? const MaterialStatePropertyAll<Color>(Colors.black)
+                      ? MaterialStatePropertyAll<Color>(
+                          AppColors.instance.color1)
                       : null,
                 ),
                 child: Text(item),

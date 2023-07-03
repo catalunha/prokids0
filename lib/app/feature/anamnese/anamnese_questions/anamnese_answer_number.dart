@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../controller/providers.dart';
@@ -33,6 +34,7 @@ class _AnamneseAnswerNumberState extends ConsumerState<AnamneseAnswerNumber> {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
+          const Text('Digite um número como resposta'),
           TextField(
             controller: _txtTec,
             decoration: InputDecoration(
@@ -42,14 +44,19 @@ class _AnamneseAnswerNumberState extends ConsumerState<AnamneseAnswerNumber> {
             ),
             // maxLines: 3,
             onChanged: (value) {
-              ref.read(answeredProvider.notifier).set([value]);
+              try {
+                double.tryParse(value);
+                ref.read(answeredProvider.notifier).set([value]);
+              } catch (e) {
+                ref.read(answeredProvider.notifier).set(['']);
+              }
             },
             keyboardType: const TextInputType.numberWithOptions(),
-            // inputFormatters: <TextInputFormatter>[
-            //   // FilteringTextInputFormatter.allow(RegExp(r'[+-\d+\.]+')),
-            //   // FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
-            //   FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-            // ],
+            inputFormatters: <TextInputFormatter>[
+              //   // FilteringTextInputFormatter.allow(RegExp(r'[+-\d+\.]+')),
+              FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+              //   FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+            ],
           ),
           TextButton(
             onPressed: () {
@@ -58,7 +65,7 @@ class _AnamneseAnswerNumberState extends ConsumerState<AnamneseAnswerNumber> {
             },
             child: const Text('Limpar resposta'),
           ),
-          Text(answered.join(','))
+          // Text(answered.join(','))
         ],
       ),
     );

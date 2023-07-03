@@ -62,7 +62,7 @@ class AnamneseQuestionNavigator extends ConsumerWidget {
                           // }
                         }
                       : null,
-                  child: const Text('finish'),
+                  child: const Text('Finalizar'),
                 ),
               )
             : const SizedBox.shrink(),

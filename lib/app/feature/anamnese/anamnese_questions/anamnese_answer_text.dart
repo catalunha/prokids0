@@ -38,6 +38,7 @@ class _AnamneseAnswerTextState extends ConsumerState<AnamneseAnswerText> {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
+          const Text('Digite um breve texto como resposta'),
           TextField(
             controller: _txtTec,
             decoration: InputDecoration(
@@ -61,7 +62,7 @@ class _AnamneseAnswerTextState extends ConsumerState<AnamneseAnswerText> {
             },
             child: const Text('Limpar resposta'),
           ),
-          Text(answered.join(','))
+          // Text(answered.join(','))
         ],
       ),
     );
