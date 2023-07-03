@@ -1,3 +1,3 @@
 class AppAssets {
-  static String splash = 'assets/images/splash.png';
+  static String image01 = 'assets/images/image01.png';
 }

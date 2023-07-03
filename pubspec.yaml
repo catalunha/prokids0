@@ -36,6 +36,7 @@ dependencies:
   time_planner: ^0.1.1
   uuid: ^3.0.7
   age_calculator: ^1.0.0
+  google_fonts: ^4.0.4
 
 dev_dependencies:
   flutter_test:
@@ -53,3 +54,5 @@ dev_dependencies:
   
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/
